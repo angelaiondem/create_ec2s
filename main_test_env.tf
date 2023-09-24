@@ -50,7 +50,7 @@ resource "aws_instance" "test_env_instance" {
   instance_type   = "t2.micro"
   subnet_id       = var.public-subnets2_id
   security_groups = [aws_security_group.test-env-sg.id]
-  # iam_instance_profile = aws_iam_instance_profile.test-env-admin-role.name
+  iam_instance_profile = aws_iam_instance_profile.test-env-admin-role.name
   key_name  = "devops-project-test-env-key"
   user_data = file("user_data.sh")
   tags = {
