@@ -20,26 +20,39 @@ resource "aws_security_group" "test-env-sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   egress {
-      from_port   = 0
-      to_port     = 0
-      protocol    = -1
-      cidr_blocks = ["0.0.0.0/0"]
-    }
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
+# Create Securiry Group for Load Balancer
+resource "aws_security_group" "elb" {
+  name        = "Test-elb-sg"
+  description = "Security group for Test Elastic Load Balancer"
+  vpc_id      = var.project_vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Allow traffic from anywhere (for public ELBs)
+  }
+}
 
 # Launch EC2 instances
 resource "aws_instance" "test_env_instance" {
-  count                = 2
-  ami                  = var.ami
-  instance_type        = "t2.micro"
-  subnet_id            = var.public-subnets2_id
-  security_groups      = [aws_security_group.test-env-sg.id]
+  count           = 2
+  ami             = var.ami
+  instance_type   = "t2.micro"
+  subnet_id       = var.public-subnets2_id
+  security_groups = [aws_security_group.test-env-sg.id]
   # iam_instance_profile = aws_iam_instance_profile.test-env-admin-role.name
-  key_name             = "devops-project-test-env-key"
-  user_data            = file("user_data.sh")
+  key_name  = "devops-project-test-env-key"
+  user_data = file("user_data.sh")
   tags = {
     Name = "Test-env-instance-${count.index + 1}"
   }
@@ -47,8 +60,9 @@ resource "aws_instance" "test_env_instance" {
 
 # Create an Elastic Load Balancer (ELB)
 resource "aws_elb" "test_env_LB" {
-  name     = "Test-env-LB"
-  internal = false
+  name            = "Test-env-LB"
+  internal        = false
+  security_groups = [aws_security_group.elb.id]
   #load_balancer_type         = "application"
   #enable_deletion_protection = false
   subnets = [var.public-subnets2_id]
