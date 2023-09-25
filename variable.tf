@@ -13,3 +13,7 @@ variable "ami" {
 variable "public-subnets2_id" {
     default = "subnet-05656f14c922bfbb0"
 }
+
+variable "public-subnets1_id" {
+    default = "subnet-02d65c5d47ac6e7c0"
+}
