@@ -1,13 +1,13 @@
 # Create a target group
 resource "aws_lb_target_group" "test_env_TG" {
   name     = "Test-env-TG"
-  port     = 8080
+  port     = 7070
   protocol = "HTTP"
   vpc_id   = var.project_vpc_id
 
   health_check {
     enabled = true
-    port     = 8081
+    port     = 8088
     path     = "/health"
     protocol = "HTTP"
     interval = 30
