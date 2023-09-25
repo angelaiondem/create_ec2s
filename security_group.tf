@@ -21,8 +21,8 @@ resource "aws_security_group" "lb_sg" {
 # Ingress rule for EC2 traffic
 resource "aws_security_group_rule" "ingress_ec2_traffic" {
   type                     = "ingress"
-  from_port                = 8080
-  to_port                  = 8080
+  from_port                = 7070
+  to_port                  = 7070
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ec2_sg.id
   source_security_group_id = aws_security_group.lb_sg.id
@@ -61,8 +61,8 @@ resource "aws_security_group_rule" "ingress_alb_traffic" {
 # Egress rule for LB traffic
 resource "aws_security_group_rule" "egress_alb_traffic" {
   type                     = "egress"
-  from_port                = 8080
-  to_port                  = 8080
+  from_port                = 7070
+  to_port                  = 7070
   protocol                 = "tcp"
   security_group_id        = aws_security_group.lb_sg.id
   source_security_group_id = aws_security_group.ec2_sg.id
