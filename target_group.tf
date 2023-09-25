@@ -22,5 +22,5 @@ resource "aws_lb_target_group_attachment" "attach_tg_to_lb" {
   count           = length(aws_instance.test_env_instance)
   target_group_arn = aws_lb_target_group.test_env_TG.arn
   target_id        = aws_instance.test_env_instance[count.index].id
-  port = 8080
+  port = 7070
 }
