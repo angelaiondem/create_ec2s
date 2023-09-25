@@ -1,5 +1,5 @@
 output "web_load_balancer_url" {
-    value = aws_elb.test_env_LB.dns_name
+    value = aws_lb.test_env_LB.dns_name
 }
 
 output "instance1_ip" {

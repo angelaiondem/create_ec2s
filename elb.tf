@@ -1,25 +1,22 @@
 # Create an Elastic Load Balancer (ELB)
-resource "aws_elb" "test_env_LB" {
+resource "aws_lb" "test_env_LB" {
   name            = "Test-env-LB"
-  security_groups = [aws_security_group.test-env-sg.id]
-  availability_zones = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
+  internal           = false
+  load_balancer_type = "application"
+  security_groups = [aws_security_group.lb_sg.id]
   subnets = [var.public-subnets1_id, var.public-subnets2_id ]
   tags = {
     Name = "Web HA ELB"
   }
+}
 
-  listener {
-    instance_port     = 80
-    instance_protocol = "http"
-    lb_port           = 80
-    lb_protocol       = "http"
-  }
-
-  health_check {
-    healthy_threshold   = "2"
-    unhealthy_threshold = "2"
-    timeout             = "3"
-    target              = "HTTP:80/"
-    interval            = "10"
+resource "aws_lb_listener" "web_listener" {
+  load_balancer_arn = aws_lb.test_env_LB.arn
+  port              = 80
+  protocol          = "HTTP"
+  
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.test_env_TG.arn
   }
 }
