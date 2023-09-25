@@ -31,8 +31,8 @@ resource "aws_security_group_rule" "ingress_ec2_traffic" {
 # Ingress rule for EC2 health check
 resource "aws_security_group_rule" "ingress_ec2_health_check" {
   type                     = "ingress"
-  from_port                = 8081
-  to_port                  = 8081
+  from_port                = 8088
+  to_port                  = 8088
   protocol                 = "tcp"
   security_group_id        = aws_security_group.ec2_sg.id
   source_security_group_id = aws_security_group.lb_sg.id
@@ -71,8 +71,8 @@ resource "aws_security_group_rule" "egress_alb_traffic" {
 # Egress rule for LB health check
 resource "aws_security_group_rule" "egress_alb_health_check" {
   type                     = "egress"
-  from_port                = 8081
-  to_port                  = 8081
+  from_port                = 8088
+  to_port                  = 8088
   protocol                 = "tcp"
   security_group_id        = aws_security_group.lb_sg.id
   source_security_group_id = aws_security_group.ec2_sg.id
@@ -91,7 +91,7 @@ resource "aws_security_group" "ec2_sg_ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.100.0.0/16"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
